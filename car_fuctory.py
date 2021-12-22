@@ -3,7 +3,7 @@ import datetime
 from engine_factory import ExtendedEngine
 
 
-class Car():
+class Car:
     """Class that realize abstract car object"""
 
     amount_of_cars = 0
@@ -23,12 +23,11 @@ class Car():
         self._color = kwargs.get("color", "White")
         self._engine = kwargs.get("engine", ExtendedEngine())
 
-        self._win_code = self._create_win_code()
-
         Car.amount_of_cars += 1
 
-    def _create_win_code(self) -> str:
-        """Creates win code for car instance"""
+    @property
+    def win_code(self) -> str:
+        """Returns win code for car instance"""
 
         today = datetime.datetime.today()
 
@@ -46,20 +45,17 @@ class Car():
     def show_amount_of_cars(cls):
         print(f'There are {cls.amount_of_cars} cars!')
 
-    def show_win_code(self):
-        print(self._win_code)
-
     def __del__(self):
         Car.amount_of_cars -= 1
 
 
 if __name__ == '__main__':
     car1 = Car()
-    car1.show_win_code()
+    print(car1.win_code)
     car2 = Car()
-    car2.show_win_code()
+    print(car2.win_code)
     car3 = Car()
-    car3.show_win_code()
+    print(car3.win_code)
 
     Car.show_amount_of_cars()
 

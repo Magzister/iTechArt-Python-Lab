@@ -1,7 +1,7 @@
 import datetime
 
 
-class Engine():
+class Engine:
     """This is a class representing the abstraction of the engine."""
 
     def __init__(self, *args, **kwargs):
