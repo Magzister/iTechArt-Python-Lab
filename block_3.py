@@ -1,54 +1,77 @@
 class FileWorker():
+    """FileWorker is a wrapper over functions for working with files."""
+
     def __init__(self):
         self._file_object = None
-        self._mode = ''
 
-    def open(self, filename, create=False, read=True):
-        self._mode = 'r'
-        if create and not read:
-            self._mode = 'w'
-        elif not create and not read:
-            self._mode = 'a'
-        elif create and read:
-            self._mode = 'w+'
+    def open(self, filename, mode='rt'):
+        """Open function provides the ability to open the file.
+
+        Arguments:
+            filename -- Name of the file.
+        Keyword arguments:
+            mode -- File open mode.
+        """
 
         try:
-            self._file_object = open(filename, self._mode)
+            self._file_object = open(filename, mode)
         except FileNotFoundError as e:
             print(e)
 
     def write(self, text):
+        """Write fuction provides the ability to write data to file.
+
+        Arguments:
+            text -- Data to be written to the file.
+        """
+
         if self._file_object:
-            if self._mode in 'wa' or self._mode == 'w+':
+            try:
                 self._file_object.write(text)
-            else:
-                print("It's not allowed to write in file with read openmode!")
+            except Exception as e:
+                print(e)
         else:
             print("Open file first!")
 
     def read(self, size=-1):
+        """Read function provides the ability to read data from file.
+
+        Arguments:
+            size -- Amount os bytes in binary mode and
+                    amount of letters in normal mode.
+        """
+
         if self._file_object:
-            if self._mode == 'r' or self._mode == 'w+':
+            try:
                 text = self._file_object.read(size)
                 return text
-            else:
-                print("It's not allowed to read from file with write openmode!")
+            except Exception as e:
+                print(e)
         else:
             print("Open file first!")
 
     def seek(self, n):
+        """Seek function moves the pointer to the specific position.
+
+        Arguments:
+            n - The position in the file.
+        """
+
         if self._file_object:
             return self._file_object.seek(n)
         else:
             print("Open file first!")
 
     def tell(self):
+        """Tell function returns current pointer position in file."""
+
         if self._file_object:
             return self._file_object.tell()
         else:
             print("Open file firest!")
 
     def close(self):
+        """Close function closes the file if it is open."""
         if self._file_object:
             self._file_object.close()
             self._file_object = None
@@ -56,18 +79,19 @@ class FileWorker():
     def __del__(self):
         self.close()
 
+
 if __name__ == '__main__':
     worker = FileWorker()
-    worker.open('./1', create=True, read=False)
+    worker.open('./1', mode='w')
     worker.write('123')
     worker.close()
-    worker.open('./1', create=False, read=True)
+    worker.open('./1', mode='r')
     data = worker.read()
     print(data)
 
     print("-" * 32)
 
-    worker.open('./2', create=True, read=True)
+    worker.open('./2', mode='a+')
     worker.write('123')
     worker.seek(0)
     data = worker.read()
