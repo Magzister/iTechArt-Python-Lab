@@ -1,4 +1,4 @@
-class FileWorker():
+class FileWorker:
     """FileWorker is a wrapper over functions for working with files."""
 
     def __init__(self, filename=None, mode='rt'):
@@ -11,6 +11,8 @@ class FileWorker():
 
     def __exit__(self, type, value, traceback):
         self.close()
+        if type:
+            raise type(value)
         return False
 
     def open(self, filename, mode='rt'):
@@ -114,5 +116,6 @@ if __name__ == '__main__':
     with FileWorker('./2', mode='a+') as worker:
         worker.write('123')
         worker.seek(0)
+        raise Exception('exception')
         data = worker.read(2)
         print(data)
