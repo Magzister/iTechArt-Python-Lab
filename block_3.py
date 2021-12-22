@@ -1,8 +1,17 @@
 class FileWorker():
     """FileWorker is a wrapper over functions for working with files."""
 
-    def __init__(self):
+    def __init__(self, filename=None, mode='rt'):
         self._file_object = None
+        if filename:
+            self.open(filename, mode)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.close()
+        return False
 
     def open(self, filename, mode='rt'):
         """Open function provides the ability to open the file.
@@ -13,6 +22,8 @@ class FileWorker():
             mode -- File open mode.
         """
 
+        if self._file_object:
+            self._file_object.close()
         try:
             self._file_object = open(filename, mode)
         except FileNotFoundError as e:
@@ -92,7 +103,16 @@ if __name__ == '__main__':
     print("-" * 32)
 
     worker.open('./2', mode='a+')
+    worker.open('./2', mode='a+')
     worker.write('123')
     worker.seek(0)
     data = worker.read()
     print(data)
+
+    print("-" * 32)
+
+    with FileWorker('./2', mode='a+') as worker:
+        worker.write('123')
+        worker.seek(0)
+        data = worker.read(2)
+        print(data)
